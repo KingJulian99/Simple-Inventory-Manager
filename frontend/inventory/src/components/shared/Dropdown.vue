@@ -9,7 +9,7 @@
             </div>
         </div>
 
-        <div v-show="isOpen" class="absolute dropdown bottom-0 left-0 flex flex-col justify-start items-center w-full translate-y-full border-2 border-b-0 border-slate-700 transition-all duration-200" :class="{['opacity-0']: !isOpen}">
+        <div v-show="isOpen" class="absolute dropdown shadow-lg bottom-0 left-0 flex flex-col justify-start items-center w-full translate-y-full border-2 border-b-0 border-slate-700 transition-all duration-200" :class="{['opacity-0']: !isOpen}">
             <slot></slot>
         </div>
     </div>

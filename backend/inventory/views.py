@@ -8,14 +8,23 @@ bp = Blueprint('inventory', __name__)
 def index():
     return jsonify({'test': 'Hello, world'}), 201
 
-@bp.route('/categories/get')
+@bp.route('/categories', methods=['GET'])
 def get_categories():
     categories = Category.query.all()
     categories_dict = [category.to_dict() for category in categories]
 
     return jsonify({'objects': categories_dict}), 201
 
-@bp.route('/categories/create', methods=['POST'])
+@bp.route('/categories/<int:object_id>', methods=['GET'])
+def get_category_details(object_id):
+    category = Category.query.get(object_id)
+
+    if category:
+        return jsonify({'object': category.to_dict()}), 201
+    else:
+        return 'Category not found', 404
+
+@bp.route('/categories', methods=['POST'])
 def create_category():
     error = None
     if request.method == 'POST':

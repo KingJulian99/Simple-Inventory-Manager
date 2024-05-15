@@ -59,7 +59,7 @@
             },
             async submit() {
                 try {
-                    const response = await axios.post('/categories/create', this.formData);
+                    const response = await axios.post('/categories', this.formData);
                     console.log(response);
                 } catch (error) {
                     this.errors.push('Issue reaching backend');

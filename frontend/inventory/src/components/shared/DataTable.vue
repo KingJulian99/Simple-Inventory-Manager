@@ -6,7 +6,7 @@
             </tr>
         </thead>
         <tbody>
-            <tr v-for="(data, index) in tableData" :key="index" class="group hover:bg-stone-200 hover:cursor-pointer">
+            <tr @click="pushDetails(data.id)" v-for="(data, index) in tableData" :key="index" class="group hover:bg-stone-200 hover:cursor-pointer">
                 <td v-for="(column, index) in columnDefinitions" class="border-2 border-black p-1 group-hover:p-2 transition-all duration-200">{{ data[column.field] }}</td>
             </tr>
         </tbody>
@@ -28,6 +28,11 @@
             tableData: {
                 type: Array,
                 default: [] // Holds objects, each with all fields specified in columnDefinitions
+            }
+        },
+        methods: {
+            pushDetails(objectId) {
+                this.$router.push({ path: `${this.$route.fullPath + '/' + objectId}` });
             }
         }
     }
