@@ -1,12 +1,12 @@
 <template>
     <div class="appear w-full h-full flex flex-row justify-start items-start">
         <div class="w-full h-full">
-            <DataTable :columnDefinitions="categoryColumns" :tableData="categories"/>
+            <DataTable ref="table" :columnDefinitions="categoryColumns" :tableData="categories"/>
         </div>
     
         <div class="w-96 shrink-0 h-20 flex flex-row justify-center items-center">
-            <Dropdown textSizeClass="text-xl" paddingSizeClass="p-4" title="Create New Category">
-                <CategoryForm/>
+            <Dropdown ref="formDropdown" textSizeClass="text-xl" paddingSizeClass="p-4" title="Create New Category">
+                <CategoryForm @created="reloadData"/>
             </Dropdown>
         </div>
     </div>
@@ -48,6 +48,11 @@
             this.loadData();
         },
         methods: {
+            async reloadData() {
+                await this.loadData();
+                this.$refs['formDropdown'].toggle();
+                this.$refs['table'].flashGreen();
+            },
             loadData() {
                 this.getCategories();
             },

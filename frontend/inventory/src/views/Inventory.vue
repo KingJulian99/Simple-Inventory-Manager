@@ -59,18 +59,3 @@
         }
     }
 </script>
-
-<style scoped>
-.appear {
-    animation: appear 200ms ease-in forwards;
-}
-
-@keyframes appear {
-    0% {
-        opacity: 0;
-    }
-    100% {
-        opacity: 100;
-    }
-}
-</style>

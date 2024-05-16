@@ -8,7 +8,8 @@
             <label for="name">Name:</label>
             <input type="text" ref="name" v-model="formData.name" class="border-2 border-black ml-4 p-1"><br><br>
             <label for="description">Description:</label>
-            <input type="description" ref="description" v-model="formData.description" class="border-2 border-black ml-4 p-1"><br><br>
+            <textarea type="text" ref="description" v-model="formData.description" class="border-2 border-black ml-4 p-1"></textarea>
+                <br><br>
             <div class="w-full flex flex-row justify-end items-center">
                 <button type="submit" class="w-32 border-2 border-black hover:bg-stone-200 transition-all duration-200">Submit</button>
             </div>
@@ -25,6 +26,20 @@
         components: {
             ErrorContainer
         },
+        props: {
+            name: {
+                type: String,
+                default: ''
+            },
+            description: {
+                type: String,
+                default: ''
+            },
+            isUpdate: {
+                type: Boolean,
+                default: false
+            }
+        },
         data() {
             return {
                 errors: [],
@@ -33,6 +48,10 @@
                     description: ''
                 }
             }
+        },
+        created() {
+            this.formData.name = this.name;
+            this.formData.description = this.description;
         },
         methods: {
             validateAndSubmit() {
@@ -58,12 +77,24 @@
                 return this.errors.length == 0;
             },
             async submit() {
-                try {
-                    const response = await axios.post('/categories', this.formData);
-                    console.log(response);
-                } catch (error) {
-                    this.errors.push('Issue reaching backend');
+                if (!this.isUpdate) {
+                    try {
+                        const response = await axios.post('/categories', this.formData);
+                        this.$emit('created');
+                        console.log(response);
+                    } catch (error) {
+                        this.errors.push('Issue reaching backend');
+                    }
+                } else {
+                    try {
+                        const response = await axios.patch(`/categories/${this.$route.params.id}`, this.formData);
+                        this.$emit('updated');
+                        console.log(response);
+                    } catch (error) {
+                        this.errors.push('Issue reaching backend');
+                    }
                 }
+                
             }
         }
     }

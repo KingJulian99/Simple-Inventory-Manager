@@ -64,3 +64,34 @@
         }
     }
 </script>
+
+<style>
+.appear {
+    animation: appear 200ms ease-in forwards;
+}
+
+@keyframes appear {
+    0% {
+        opacity: 0;
+    }
+    100% {
+        opacity: 100;
+    }
+}
+
+.flash-green {
+    animation: flash-green 500ms ease-in forwards;
+}
+
+@keyframes flash-green {
+    0% {
+       background-color: transparent; 
+    }
+    50% {
+        background-color: green;
+    }
+    100% {
+        background-color: transparent; 
+    }
+}
+</style>
