@@ -65,25 +65,32 @@ class Category(Base):
             'last_modified': self.last_modified.isoformat(),
         }
     
-# class Supplier(Base):
-#     __tablename__ = 'suppliers'
-#     id = Column(Integer, primary_key=True)
-#     name = Column(String(100), nullable=False)
-#     description = Column(Text)
-#     address = Column(Text)
-#     email = Column(String(120), nullable=False, unique=True)
-#     contact_number = Column(String(20))
-#     date_added = Column(DateTime, default=datetime.now)
-#     last_modified = Column(DateTime, default=datetime.now, onupdate=datetime.now)
+class Supplier(Base):
+    __tablename__ = 'suppliers'
+    id = Column(Integer, primary_key=True)
+    name = Column(String(100), nullable=False)
+    description = Column(Text)
+    address = Column(Text)
+    email = Column(String(120), nullable=False, unique=True)
+    contact_number = Column(String(20))
+    date_added = Column(DateTime, default=datetime.now)
+    last_modified = Column(DateTime, default=datetime.now, onupdate=datetime.now)
 
-#     def to_dict(self):
-#         return {
-#             'id': self.id,
-#             'name': self.name,
-#             'description': self.description,
-#             'address': self.address,
-#             'email': self.email,
-#             'contact_number': self.contact_number,
-#             'date_added': self.date_added.isoformat(),
-#             'last_modified': self.last_modified.isoformat()
-#         }
+    def __init__(self, name=None, description=None, address=None, email=None, contact_number=None):
+        self.name = name
+        self.description = description
+        self.address = address
+        self.email = email
+        self.contact_number = contact_number
+
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'name': self.name,
+            'description': self.description,
+            'address': self.address,
+            'email': self.email,
+            'contact_number': self.contact_number,
+            'date_added': self.date_added.isoformat(),
+            'last_modified': self.last_modified.isoformat()
+        }

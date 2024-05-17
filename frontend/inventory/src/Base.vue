@@ -51,6 +51,9 @@
                     }
                 }
             },
+            conditionallyAddBackButton(urlPath) {
+                // Add this when on a deeper URL path.
+            },
             swapMenuOption(index) {
                 this.selectedMenuOptionIndex = index;
                 this.$refs['mainMenu'].toggle();
@@ -60,6 +63,7 @@
         watch: {
             '$route'(to, from) {
                 this.setSelectedMenuOptionToURL(to.path);
+                this.conditionallyAddBackButton(to.path);
             }
         }
     }
