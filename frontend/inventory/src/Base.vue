@@ -1,10 +1,16 @@
 <template>
     <div class="p-10 flex flex-col justify-center items-center">
-        <div class="w-full z-10 mb-5">
+        <div class="w-full z-10 mb-8 flex flex-row justify-start items-center">
             <div class="w-fit h-36">
                 <Dropdown ref="mainMenu" textSizeClass="text-8xl" paddingSizeClass="p-10" :title="menuOptions[selectedMenuOptionIndex]">
                     <DropdownRow @click="swapMenuOption(index)" v-for="(menuOption, index) in menuOptions" :key="index" v-show="menuOption !== menuOptions[selectedMenuOptionIndex]" :text="menuOption" size="lg"/>
                 </Dropdown>
+            </div>
+            <div @click="goBack" v-show="isBackButtonVisible" class="appear text-8xl font-extralight flex flex-row justify-start items-center ml-10 gap-4">
+                <div class="w-24 h-24 flex flex-col justify-center items-center hover:cursor-pointer hover:bg-stone-400 transition-all duration-200">
+                    <img src="/images/arrow.svg" class="w-2/3 rotate-180 black-filter">
+                </div>
+                <h1>Details</h1>
             </div>
         </div>
 
@@ -40,6 +46,8 @@
                     'Suppliers',
                     'Categories'
                 ],
+                isBackButtonVisible: false,
+                backButtonPathName: ''
             }
         },
         methods: {
@@ -52,7 +60,17 @@
                 }
             },
             conditionallyAddBackButton(urlPath) {
-                // Add this when on a deeper URL path.
+                let path = urlPath.split('/');
+
+                if (path.length - 1 > 1) {
+                    this.isBackButtonVisible = true;
+                    this.backButtonPathName = path[1];
+                } else {
+                    this.isBackButtonVisible = false;
+                }
+            },
+            goBack() {
+                this.$router.push({ name: this.backButtonPathName });
             },
             swapMenuOption(index) {
                 this.selectedMenuOptionIndex = index;
@@ -97,5 +115,9 @@
     100% {
         background-color: transparent; 
     }
+}
+
+.black-filter {
+    filter: invert(100%) grayscale(100%);
 }
 </style>

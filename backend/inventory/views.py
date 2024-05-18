@@ -8,15 +8,51 @@ bp = Blueprint('inventory', __name__)
 @bp.route('/fill')
 def index():
     for _ in range(5):
-        category = Category(generate_random_string(), generate_random_string())
-        db_session.add(category)
+        pass
+        # category = Category(generate_random_string(), generate_random_string())
+        # db_session.add(category)
 
-        supplier = Supplier(generate_random_string(), generate_random_string(), generate_random_string(),generate_random_string(),generate_random_string())
-        db_session.add(supplier)
+        # supplier = Supplier(generate_random_string(), generate_random_string(), generate_random_string(),generate_random_string(),generate_random_string())
+        # db_session.add(supplier)
 
-        db_session.commit()
+        # db_session.commit()
 
     return jsonify({'test': 'Filled'}), 201
+
+@bp.route('/products', methods=['GET', 'POST'])
+def products():
+    if request.method == "GET":
+        products = Product.query.all()
+        products_dict = [product.to_dict() for product in products]
+
+        return jsonify({'objects': products_dict}), 201
+    
+    elif request.method == "POST":
+        error = None
+        
+        data = request.json
+        name = data['name']
+        description = data['description']
+        category_ids = data['category_ids']
+
+        if (len(name.strip()) == 0 or len(name.strip()) > 32):
+            error = 'Name is not valid'
+
+        if (len(description.strip()) == 0 or len(description.strip()) > 128):
+            error = 'Description is not valid'
+
+        if not error:
+            product = Product(name=name, description=description)
+            for category_id in category_ids:
+                category = Category.query.get(category_id)
+                product.categories.append(category)
+
+            db_session.add(product)
+            db_session.commit()
+
+            return jsonify({'message': 'successfully created new product.'}), 201
+        else:
+            return jsonify({'message': 'error when trying to create new product.', 'error': error}), 201
 
 @bp.route('/suppliers', methods=['GET', 'POST'])
 def suppliers():
@@ -82,19 +118,47 @@ def supplier_details(object_id):
             return jsonify({'message': 'failed to find supplier'}), 400
 
     elif request.method == "PATCH":
+        error = None
+
         supplier = Supplier.query.get(object_id)
 
         if supplier:
             data = request.json
             name = data['name']
             description = data['description']
+            email = data['email']
+            address = data['address']
+            contact_number = data['number']
 
-            supplier.name = name
-            supplier.description = description
+            if (len(name.strip()) == 0 or len(name.strip()) > 32):
+                error = 'Name is not valid'
 
-            db_session.commit()
+            if (len(description.strip()) == 0 or len(description.strip()) > 128):
+                error = 'Description is not valid'
 
-            return jsonify({'message': 'success'}), 201
+            if (len(email.strip()) == 0 or len(email.strip()) > 128 or email.find('@') == -1):
+                error = 'Email is not valid'
+
+            if (len(address.strip()) == 0 or len(address.strip()) > 128):
+                error = 'Address is not valid'
+            
+            if (len(str(contact_number)) != 10):
+                error = 'Contact number is not valid'
+
+            if not error:
+                supplier.name = name
+                supplier.description = description
+                supplier.email = email
+                supplier.address = address
+                supplier.contact_number = contact_number
+
+                db_session.commit()
+
+                return jsonify({'message': 'success'}), 201
+            
+            else:
+                return jsonify({'error': 'failed to validate data'}), 400
+            
         else:
             return jsonify({'message': 'failed to find supplier'}), 400
 

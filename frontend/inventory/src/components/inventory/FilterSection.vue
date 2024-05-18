@@ -17,7 +17,7 @@
         <div class="border-r-2 border-dashed border-black">&nbsp;</div>
 
         <div class="w-full h-10 flex flex-row justify-start items-center">
-            <Filter v-for="(filter, index) in filters" :key="index" :text="filter.text"/>
+            <Tag v-for="(filter, index) in filters" :key="index" :text="filter.text"/>
         </div>
         
     </div>
@@ -26,14 +26,14 @@
 <script>
     import Dropdown from '@/components/shared/Dropdown.vue';
     import DropdownRow from '@/components/shared/DropdownRow.vue';
-    import Filter from '@/components/inventory/Filter.vue';
+    import Tag from '@/components/shared/Tag.vue';
 
     export default {
         name: 'FilterSection',
         components: {
             Dropdown,
             DropdownRow,
-            Filter
+            Tag
         },
         props: {
             categories: {

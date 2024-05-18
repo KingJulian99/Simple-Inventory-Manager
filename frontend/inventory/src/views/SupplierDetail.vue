@@ -78,9 +78,3 @@
         }
     }
 </script>
-
-<style scoped>
-.black-filter {
-    filter: invert(100%) grayscale(100%);
-}
-</style>

@@ -18,8 +18,8 @@ from inventory.database import init_db
 init_db()
 
 # Add some dummy data
-for i in range(5):
-    category = Category(generate_random_string(), generate_random_string())
-    db_session.add(category)
-    db_session.commit()
+# for i in range(5):
+#     category = Category(generate_random_string(), generate_random_string())
+#     db_session.add(category)
+#     db_session.commit()
 

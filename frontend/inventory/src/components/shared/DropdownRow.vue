@@ -12,10 +12,6 @@
                 type: String,
                 default: ''
             },
-            callback: {
-                type: Function,
-                required: false
-            },
             size: {
                 type: String,
                 default: 'md'
