@@ -3,21 +3,22 @@
         <h2 class="text-4xl text-nowrap shrink-0">Filter By:</h2>
         
         <div class="w-36 shrink-0 h-10">
-            <Dropdown title="Category">
-                <DropdownRow v-for="(category, index) in categories" :key="index" :text="category" size="sm"/>
+            <Dropdown ref="categoryDropdown" title="Category">
+                <DropdownRow @click="addCategoryFilter(category)" v-for="(category, index) in categories" :key="index" :text="category.name" size="sm"/>
             </Dropdown>
         </div>
 
         <div class="w-36 shrink-0 h-10">
-            <Dropdown title="Supplier">
-                <DropdownRow v-for="(supplier, index) in suppliers" :key="index" :text="supplier" size="sm"/>
+            <Dropdown ref="supplierDropdown" title="Supplier">
+                <DropdownRow @click="addSupplierFilter(supplier)" v-for="(supplier, index) in suppliers" :key="index" :text="supplier.name" size="sm"/>
             </Dropdown>
         </div>
 
         <div class="border-r-2 border-dashed border-black">&nbsp;</div>
 
-        <div class="w-full h-10 flex flex-row justify-start items-center">
-            <Tag v-for="(filter, index) in filters" :key="index" :text="filter.text"/>
+        <div class="w-full h-10 flex flex-row justify-start items-center gap-2">
+            <Tag @remove="removeCategoryFilter(categoryFilter)" v-for="(categoryFilter, index) in categoryFilters" :key="index" :text="categoryFilter.name" class="appear"/>
+            <Tag @remove="removeSupplierFilter(supplierFilter)" v-for="(supplierFilter, index) in supplierFilters" :key="index" :text="supplierFilter.name" class="appear"/>
         </div>
         
     </div>
@@ -44,10 +45,30 @@
                 type: Array,
                 default: []
             },
-            filters: {
+            categoryFilters: {
                 type: Array,
                 default: []
+            },
+            supplierFilters: {
+                type: Array,
+                default: [] 
             }
+        },
+        methods: {
+            addCategoryFilter(category) {
+                this.$refs['categoryDropdown'].toggle();
+                this.$emit('addCategoryFilter', category);
+            },
+            removeCategoryFilter(category) {
+                this.$emit('removeCategoryFilter', category);
+            },
+            addSupplierFilter(supplier) {
+                this.$refs['supplierDropdown'].toggle();
+                this.$emit('addSupplierFilter', supplier);
+            },
+            removeSupplierFilter(supplier) {
+                this.$emit('removeSupplierFilter', supplier);
+            },
         }
     }
 </script>

@@ -2,7 +2,7 @@
     
     <div class="appear w-full h-full flex flex-col justify-start items-center">
         <div class="w-full h-24">
-            <FilterSection :categories="categories.map(category => category.name)" :suppliers="suppliers" :filters="filters"/>
+            <FilterSection :categories="categories" :suppliers="suppliers" :categoryFilters="categoryFilters" :supplierFilters="supplierFilters" @addCategoryFilter="addCategoryFilter" @removeCategoryFilter="removeCategoryFilter" @addSupplierFilter="addSupplierFilter" @removeSupplierFilter="removeSupplierFilter"/>
         </div>
     </div>
     
@@ -28,33 +28,46 @@
         data() {
             return {
                 categories: [],
-                suppliers: [
-                    'Sony',
-                    'AMD',
-                    'Communica',
-                    'DIYElectronics',
-                    'Nintendo'
-                ],
-                filters: [
-                    {
-                        type: 'category',
-                        objectId: 0,
-                        text: 'Consoles'
-                    }
-                ]
+                suppliers: [],
+                categoryFilters: [],
+                supplierFilters: []
             }
         },
         created() {
             this.loadData();
-            console.log(this.$route.path);
         },
         methods: {
             loadData() {
                 this.getCategories();
+                this.getSuppliers();
             },
             async getCategories() {
-                const response = await axios.get('/categories/get');
+                const response = await axios.get('/categories');
                 this.categories = response.data.objects;
+            },
+            async getSuppliers() {
+                const response = await axios.get('/suppliers');
+                this.suppliers = response.data.objects;
+            },
+            addCategoryFilter(category) {
+                const exists = this.categoryFilters.some(item => item.id === category.id);
+
+                if (!exists) {
+                    this.categoryFilters.push(category);
+                }
+            },
+            removeCategoryFilter(category) {
+                this.categoryFilters = this.categoryFilters.filter(item => item.id != category.id);
+            },
+            addSupplierFilter(supplier) {
+                const exists = this.supplierFilters.some(item => item.id === supplier.id);
+
+                if (!exists) {
+                    this.supplierFilters.push(supplier);
+                }
+            },
+            removeSupplierFilter(supplier) {
+                this.supplierFilters = this.supplierFilters.filter(item => item.id != supplier.id);
             }
         }
     }

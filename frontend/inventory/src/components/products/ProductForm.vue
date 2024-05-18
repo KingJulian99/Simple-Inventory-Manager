@@ -49,6 +49,10 @@
                 type: String,
                 default: ''
             },
+            categories: {
+                type: Array,
+                default: []
+            },
             isUpdate: {
                 type: Boolean,
                 default: false
@@ -69,6 +73,7 @@
             this.loadData();
             this.formData.name = this.name;
             this.formData.description = this.description;
+            this.selectedCategoryOptions = JSON.parse(JSON.stringify(this.categories));
         },
         methods: {
             async loadData() {
@@ -123,6 +128,9 @@
                     }
                 } else {
                     try {
+                        const categoryIds = this.selectedCategoryOptions.map(item => item.id);
+                        this.formData['category_ids'] = categoryIds;
+                        
                         const response = await axios.patch(`/products/${this.$route.params.id}`, this.formData);
                         this.$emit('updated');
                         console.log(response);

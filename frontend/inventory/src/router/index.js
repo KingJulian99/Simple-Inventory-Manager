@@ -4,8 +4,9 @@ import Inventory from '../views/Inventory.vue'
 import Categories from '../views/Categories.vue'
 import CategoryDetail from '../views/CategoryDetail.vue'
 import Suppliers from '../views/Suppliers.vue'
-import Products from '../views/Products.vue'
 import SupplierDetail from '@/views/SupplierDetail.vue'
+import Products from '../views/Products.vue'
+import ProductDetail from '../views/ProductDetail.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -39,6 +40,11 @@ const router = createRouter({
       path: '/products',
       name: 'products',
       component: Products
+    },
+    {
+      path: '/products/:id',
+      name: 'productDetail',
+      component: ProductDetail
     },
   ]
 })

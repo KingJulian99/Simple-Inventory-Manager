@@ -1,12 +1,22 @@
 <template>
     <div class="appear w-full flex flex-row justify-between items-start">
         <div ref="details" class="shrink-0 flex flex-col justify-start items-start gap-4 border-2 border-black p-4">
-            <div v-for="key in Object.keys(data)" :key="key" class="flex flex-row justify-start items-start gap-4">
+            <div v-for="key in Object.keys(data)" :key="key" v-show="ignoredKeys.indexOf(key) == -1" class="flex flex-row justify-start items-start">
                 <div class="w-32 font-bold flex flex-col justify-center items-start">
                     {{ key }}
                 </div>
                 <div class="flex flex-col justify-center items-start">
                     {{ data[key] }}
+                </div>
+            </div>
+
+            <div class="w-32 font-bold flex flex-col justify-center items-start">
+                categories
+            </div>
+            <div v-if="data.categories" class="w-full p-2 flex flex-row justify-start items-start flex-wrap gap-2">
+                <Tag v-for="(category, index) in data.categories" :key="category.id" :text="category.name" :readOnly="true"/>
+                <div v-show="data.categories.length == 0" class="flex flex-col justify-start items-start">
+                    <p>None</p>
                 </div>
             </div>
         </div>
@@ -17,8 +27,8 @@
                 <p v-show="deleteCheck" class="appear">Are you sure?</p>
             </div>
             <div v-if="Object.keys(data).length > 0" class="w-96 shrink-0 h-20 flex flex-row justify-center items-center">
-                <Dropdown ref="formDropdown" textSizeClass="text-xl" paddingSizeClass="p-4" title="Edit Supplier">
-                    <SupplierForm :name="data['name']" :description="data['description']" :email="data['email']" :address="data['address']" :number="data['contact_number']" :isUpdate="true" @updated="reloadData"/>
+                <Dropdown ref="formDropdown" textSizeClass="text-xl" paddingSizeClass="p-4" title="Edit Product">
+                    <ProductForm :name="data['name']" :description="data['description']" :categories="data['categories']" :isUpdate="true" @updated="reloadData"/>
                 </Dropdown>
             </div>
         </div>
@@ -29,18 +39,22 @@
 
 <script>
     import Dropdown from '@/components/shared/Dropdown.vue';
-    import SupplierForm from '@/components/suppliers/SupplierForm.vue';
+    import Tag from '@/components/shared/Tag.vue';
+    import ProductForm from '@/components/products/ProductForm.vue';
     import axios from '@/axios';
 
     export default {
-        name: 'SupplierDetail',
+        name: 'ProductDetail',
         components: {
             Dropdown,
-            SupplierForm
+            ProductForm,
+            Tag
         },
         data() {
             return {
                 data: {},
+                ignoredKeys: ['categories'],
+                selectedCategories: [],
                 deleteCheck: false
             }
         },
@@ -57,7 +71,7 @@
                 }, 500);
             },
             async loadData() {
-                const response = await axios.get(`/suppliers/${this.$route.params.id}`)
+                const response = await axios.get(`/products/${this.$route.params.id}`)
                 this.data = response.data.object;
             },
             handleDelete() {
@@ -72,9 +86,15 @@
                 }
             },
             async tryDelete() {
-                const response = await axios.delete(`/suppliers/${this.$route.params.id}`)
-                this.$router.push({ name: 'suppliers' });
+                const response = await axios.delete(`/products/${this.$route.params.id}`)
+                this.$router.push({ name: 'products' });
             }
         }
     }
 </script>
+
+<style scoped>
+.black-filter {
+    filter: invert(100%) grayscale(100%);
+}
+</style>

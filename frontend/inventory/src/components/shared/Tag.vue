@@ -1,9 +1,9 @@
 <template>
     <div class="disappear parent w-fit h-full flex flex-row justify-start items-center border-2 border-black">
-        <div @click="remove" class="brother w-full h-full flex flex-col justify-center items-start p-2 hover:cursor-pointer  hover:bg-red-500 transition-all duration-200">
+        <div @click="remove" v-show="!readOnly" class="brother w-full h-full flex flex-col justify-center items-start p-2 hover:cursor-pointer hover:bg-red-500 transition-all duration-200">
             <p :class="{'text-lg': size=='lg', 'text-base': size=='md', 'text-sm': size=='sm'}" class="font-bold">X</p>
         </div>
-        <div class="sister w-full h-full flex flex-col justify-center items-start p-2 pl-0 transition-all duration-200">
+        <div :class="{'pl-0': !readOnly, 'pl-2': readOnly}" class="sister w-full h-full flex flex-col justify-center items-start p-2 transition-all duration-200">
             <p :class="{'text-lg': size=='lg', 'text-base': size=='md', 'text-sm': size=='sm'}">{{ text }}</p>
         </div>
     </div>
@@ -20,6 +20,10 @@
             size: {
                 type: String,
                 default: 'md'
+            },
+            readOnly: {
+                type: Boolean,
+                default: false
             }
         },
         methods: {

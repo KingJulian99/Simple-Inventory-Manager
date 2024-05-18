@@ -53,6 +53,63 @@ def products():
             return jsonify({'message': 'successfully created new product.'}), 201
         else:
             return jsonify({'message': 'error when trying to create new product.', 'error': error}), 201
+        
+@bp.route('/products/<int:object_id>', methods=['GET', 'DELETE', 'PATCH'])
+def product_details(object_id):
+    if request.method == "GET":
+        product = Product.query.get(object_id)
+
+        if product:
+            return jsonify({'object': product.to_dict()}), 201
+        else:
+            return 'Product not found', 404
+        
+    elif request.method == "DELETE":
+        product = Product.query.get(object_id)
+
+        if product:
+            db_session.delete(product)
+            db_session.commit()
+
+            return jsonify({'message': 'success'}), 201
+        else:
+            return jsonify({'message': 'failed to find supplier'}), 400
+
+    elif request.method == "PATCH":
+        error = None
+
+        product = Product.query.get(object_id)
+
+        if product:
+            data = request.json
+            name = data['name']
+            description = data['description']
+            category_ids = data['category_ids']
+
+            if (len(name.strip()) == 0 or len(name.strip()) > 32):
+                error = 'Name is not valid'
+
+            if (len(description.strip()) == 0 or len(description.strip()) > 128):
+                error = 'Description is not valid'
+
+            if not error:
+                product.name = name
+                product.description = description
+                product.categories.clear()
+                
+                for category_id in category_ids:
+                    category = Category.query.get(category_id)
+                    product.categories.append(category)
+
+                db_session.commit()
+
+                return jsonify({'message': 'success'}), 201
+            
+            else:
+                return jsonify({'error': 'failed to validate data'}), 400
+            
+        else:
+            return jsonify({'message': 'failed to find product'}), 400
 
 @bp.route('/suppliers', methods=['GET', 'POST'])
 def suppliers():

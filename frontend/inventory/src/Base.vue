@@ -10,7 +10,9 @@
                 <div class="w-24 h-24 flex flex-col justify-center items-center hover:cursor-pointer hover:bg-stone-400 transition-all duration-200">
                     <img src="/images/arrow.svg" class="w-2/3 rotate-180 black-filter">
                 </div>
-                <h1>Details</h1>
+                <div class="h-full flex flex-col justify-center items-start">
+                    <h1>/ Details</h1>
+                </div>
             </div>
         </div>
 
