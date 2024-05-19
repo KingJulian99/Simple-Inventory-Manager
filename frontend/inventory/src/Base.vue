@@ -103,6 +103,21 @@
     }
 }
 
+.appear-and-slot-in {
+    animation: appear-and-slot-in 200ms ease-in forwards;
+}
+
+@keyframes appear-and-slot-in {
+    0% {
+        opacity: 0;
+        transform: translateX(30px);
+    }
+    100% {
+        opacity: 100;
+        transform: translateX(0);
+    }
+}
+
 .flash-green {
     animation: flash-green 500ms ease-in forwards;
 }

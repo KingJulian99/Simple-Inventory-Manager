@@ -16,11 +16,13 @@ class Product(Base):
     description = Column(Text)
     date_added = Column(DateTime, default=datetime.now)
     last_modified = Column(DateTime, default=datetime.now, onupdate=datetime.now)
+
     categories = relationship(
         'Category',
         secondary=product_category_association,
         back_populates='products'
     )
+    inventory_items = relationship('InventoryItem', back_populates='product')
 
     def __init__(self, name=None, description=None):
         self.name = name
@@ -35,26 +37,32 @@ class Product(Base):
             'categories': [category.to_dict() for category in self.categories]
         }
     
-# class InventoryItem(Base):
-#     __tablename__ = 'inventory_items'
-#     id = Column(Integer, primary_key=True)
-#     product_id = Column(Integer, ForeignKey('products.id'))
-#     product = relationship('Product', uselist=False)
-#     purchase_price = Column(Float, nullable=False)
-#     date_added = Column(DateTime, default=datetime.now)
-#     last_modified = Column(DateTime, default=datetime.now, onupdate=datetime.now)
-#     supplier_id = Column(Integer, ForeignKey('suppliers.id')) #-could be bullshit "duplicate fields"
-#     supplier = relationship('Supplier', uselist=False)
+class InventoryItem(Base):
+    __tablename__ = 'inventory_items'
+    id = Column(Integer, primary_key=True)
+    product_id = Column(Integer, ForeignKey('products.id'), nullable=False)
+    supplier_id = Column(Integer, ForeignKey('suppliers.id'))
+    purchase_price = Column(Float, nullable=False)
+    date_added = Column(DateTime, default=datetime.now)
+    last_modified = Column(DateTime, default=datetime.now, onupdate=datetime.now)
+    
+    product = relationship('Product', back_populates='inventory_items')
+    supplier = relationship('Supplier', back_populates='inventory_items')
 
-#     def to_dict(self):
-#         return {
-#             'id': self.id,
-#             'product': self.product.to_dict(),
-#             'purchase_price': self.purchase_price,
-#             'date_added': self.date_added.isoformat(),
-#             'last_modified': self.last_modified.isoformat(),
-#             'supplier': self.supplier.to_dict()
-#         }
+    def __init__(self, product=product, supplier=supplier, purchase_price=purchase_price):
+        self.purchase_price = purchase_price
+        self.product = product
+        self.supplier = supplier
+
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'product': self.product.to_dict(),
+            'purchase_price': self.purchase_price,
+            'date_added': self.date_added.isoformat(),
+            'last_modified': self.last_modified.isoformat(),
+            'supplier': self.supplier.to_dict()
+        }
     
 class Category(Base):
     __tablename__ = 'categories'
@@ -63,6 +71,7 @@ class Category(Base):
     description = Column(Text)
     date_added = Column(DateTime, default=datetime.now)
     last_modified = Column(DateTime, default=datetime.now, onupdate=datetime.now)
+
     products = relationship(
         'Product',
         secondary=product_category_association,
@@ -95,6 +104,8 @@ class Supplier(Base):
     contact_number = Column(String(20))
     date_added = Column(DateTime, default=datetime.now)
     last_modified = Column(DateTime, default=datetime.now, onupdate=datetime.now)
+
+    inventory_items = relationship('InventoryItem', back_populates='supplier')
 
     def __init__(self, name=None, description=None, address=None, email=None, contact_number=None):
         self.name = name

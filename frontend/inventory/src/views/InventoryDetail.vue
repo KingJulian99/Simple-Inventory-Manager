@@ -2,7 +2,7 @@
     <div class="appear w-full flex flex-row justify-between items-start">
         <div ref="details" class="shrink-0 flex flex-col justify-start items-start gap-4 border-2 border-black p-4">
             <div v-for="key in Object.keys(data)" :key="key" v-show="ignoredKeys.indexOf(key) == -1" class="flex flex-row justify-start items-start">
-                <div class="w-32 font-bold flex flex-col justify-center items-start">
+                <div class="w-36 font-bold flex flex-col justify-center items-start">
                     {{ key }}
                 </div>
                 <div class="flex flex-col justify-center items-start">
@@ -10,15 +10,24 @@
                 </div>
             </div>
 
-            <div class="w-32 font-bold flex flex-col justify-center items-start">
-                categories
-            </div>
-            <div v-if="data.categories" class="w-full p-2 flex flex-row justify-start items-start flex-wrap gap-2">
-                <Tag v-for="(category, index) in data.categories" :key="category.id" :text="category.name" :readOnly="true" :isClickable="true" pathName="categoryDetail" :pathParam="String(category.id)"/>
-                <div v-show="data.categories.length == 0" class="flex flex-col justify-start items-start">
-                    <p>None</p>
+            <div class="w-full flex flex-row justify-start items-center">
+                <div class="w-36 shrink-0 font-bold flex flex-col justify-center items-start">
+                    product
+                </div>
+                <div v-if="data.product" class="w-full flex flex-row justify-start items-start flex-wrap">
+                    <Tag :text="data.product.name" :readOnly="true" :isClickable="true" pathName="productDetail" :pathParam="String(data.product.id)"/>
                 </div>
             </div>
+
+            <div class="w-full flex flex-row justify-start items-center">
+                <div class="w-36 shrink-0 font-bold flex flex-col justify-center items-start">
+                    supplier
+                </div>
+                <div v-if="data.supplier" class="w-full flex flex-row justify-start items-start flex-wrap">
+                    <Tag :text="data.supplier.name" :readOnly="true" :isClickable="true" pathName="supplierDetail" :pathParam="String(data.supplier.id)"/>
+                </div>
+            </div>
+           
         </div>
 
         <div class="w-full flex flex-row justify-end items-start gap-4">
@@ -27,8 +36,8 @@
                 <p v-show="deleteCheck" class="appear">Are you sure?</p>
             </div>
             <div v-if="Object.keys(data).length > 0" class="w-96 shrink-0 h-20 flex flex-row justify-center items-center">
-                <Dropdown ref="formDropdown" textSizeClass="text-xl" paddingSizeClass="p-4" title="Edit Product">
-                    <ProductForm :name="data['name']" :description="data['description']" :categories="data['categories']" :isUpdate="true" @updated="reloadData"/>
+                <Dropdown ref="formDropdown" textSizeClass="text-xl" paddingSizeClass="p-4" title="Edit Inventory Item">
+                    <InventoryItemForm :product="data.product" :supplier="data.supplier" :purchase_price="data.purchase_price" :isUpdate="true" @updated="reloadData"/>
                 </Dropdown>
             </div>
         </div>
@@ -39,21 +48,21 @@
 
 <script>
     import Dropdown from '@/components/shared/Dropdown.vue';
+    import InventoryItemForm from '@/components/inventory/InventoryItemForm.vue';
     import Tag from '@/components/shared/Tag.vue';
-    import ProductForm from '@/components/products/ProductForm.vue';
     import axios from '@/axios';
 
     export default {
-        name: 'ProductDetail',
+        name: 'InventoryDetail',
         components: {
             Dropdown,
-            ProductForm,
+            InventoryItemForm,
             Tag
         },
         data() {
             return {
                 data: {},
-                ignoredKeys: ['categories'],
+                ignoredKeys: ['product', 'supplier'],
                 deleteCheck: false
             }
         },
@@ -70,7 +79,7 @@
                 }, 500);
             },
             async loadData() {
-                const response = await axios.get(`/products/${this.$route.params.id}`)
+                const response = await axios.get(`/inventory/${this.$route.params.id}`)
                 this.data = response.data.object;
             },
             handleDelete() {
@@ -85,8 +94,8 @@
                 }
             },
             async tryDelete() {
-                const response = await axios.delete(`/products/${this.$route.params.id}`)
-                this.$router.push({ name: 'products' });
+                const response = await axios.delete(`/inventory/${this.$route.params.id}`)
+                this.$router.push({ name: 'inventory' });
             }
         }
     }
