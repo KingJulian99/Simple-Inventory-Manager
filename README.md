@@ -88,9 +88,6 @@ More effort into making the application's layout mobile-friendly.
 ## Selecting multiple objects for deletion
 It would have been nice to be able to select multiple inventory items in order to mass-delete them.
 
-# Thank you!
-Thank you very much for your time and consideration during this process. I really enjoyed building this application and learnt quite a lot throughout. 
-
 I hope to hear how I did in the assessment, and wish you enjoy clicking around the app :D
 
 All the best!
