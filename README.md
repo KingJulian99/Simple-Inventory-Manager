@@ -1,3 +1,8 @@
+# Description
+This application is a simple inventory management system. It consists of the main components "Categories", "Suppliers" and "Items".
+
+![Inventory_Management](https://github.com/user-attachments/assets/7c397d91-de90-4f3d-a6a6-948a17eec599)
+
 # Setup Instructions
 The application consists of the two directories: "frontend" and "backend".
 
